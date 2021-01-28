@@ -1,0 +1,36 @@
+{% extends 'base.html' %}
+
+{% block settings %}
+
+<nav class="navbar navbar-expand-sm navbar-dark primary-color ">
+    <a class="navbar-brand" href="/">ProxyWeb</a>
+
+    <a class="nav-link" href="/settings/edit/">
+        <i class="fas fa-cog fa-lg white-text"></i> </a>
+
+
+</nav>
+
+
+{% if message %}
+
+<span class="border border-primary">
+        <div class="note note-success"">
+            <pre><strong>Saving the config was successful!</strong></pre>
+            <strong>Click <a href="/"> here</a> to activate it:</strong>
+    </div>
+</span>
+{% else %}
+
+<div class="form-group text-monospace blue-border-focus letter-spacing:fixed ">
+    <form action="/settings/save/" method="post">
+        <div class="form-group ">
+            <label for="exampleFormControlTextarea2"></label>
+            <textarea class="form-control " name="settings" id="settings" rows="30">{{ config_file_content }}</textarea>
+        </div>
+        <button type="submit" class="btn btn-primary">Submit</button>
+    </form>
+</div>
+{%  endif %}
+
+{% endblock %}

@@ -1,0 +1,87 @@
+{% extends 'base.html' %}
+
+
+{% block content %}
+<nav class="navbar navbar-expand-sm navbar-dark primary-color ">
+    <a class="navbar-brand" href="/" >ProxyWeb</a>
+
+
+    <!-- Collapse button -->
+    <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#basicExampleNav"
+            aria-controls="basicExampleNav" aria-expanded="false" aria-label="Toggle navigation">
+        <span class="navbar-toggler-icon"></span>
+    </button>
+
+    <!-- Collapsible content -->
+    <div class="container-fluid justify-content-between" id="basicExampleNav">
+
+        <ul class="navbar-nav mr-auto navbar-expand-lg  ">
+
+
+            {% for key,value in session['dblist'][session['server']]|dictsort %}
+            {% if key == session['database'] %}
+            <li class="nav-item dropdown active">
+                {% else %}
+            <li class="nav-item dropdown">
+                {% endif %}
+
+                <a class="nav-link dropdown-toggle " id="navbarDropdownMenuLink" data-toggle="dropdown"
+                   aria-haspopup="true" aria-expanded="false">{{ key }} </a>
+
+
+                <div class="dropdown-menu dropdown-primary" aria-labelledby="navbarDropdownMenuLink">
+                    {% for item in value %}
+                    <a style="line-height:5px;" class="dropdown-item "
+                       href="/{{ session['server'] }}/{{ key }}/{{  item }}/">{{ item }}</a>
+                    {% endfor %}
+                </div>
+            </li>
+
+
+            {% endfor %}
+
+            <ul class="navbar-nav flex-row d-none d-md-flex ">
+
+                <li class="nav-item dropdown">
+                    <a class="nav-link dropdown-toggle btn-outline-white" id="navbarDropdownMenuLink"
+                       data-toggle="dropdown"
+                       aria-haspopup="true" aria-expanded="false">{{ session['server'] }} </a>
+                    <div class="dropdown-menu dropdown-primary" aria-labelledby="navbarDropdownMenuLink">
+                        {% for item in session['servers'] %}
+
+                        {% if item == session['server'] %}
+                        <a style="line-height:5px;" class="dropdown-item active" href="">{{ item }}</a>
+                        {% else %}
+                        <a style="line-height:5px;" class="dropdown-item "
+                           href="/{{ item  }}/{{ session['database'] }}/{{ session['table'] }}">{{ item }}</a>
+
+                        {% endif %}
+
+                        {% endfor %}
+                    </div>
+                </li>
+
+            </ul>
+
+
+        </ul>
+            <span class="navbar-text white-text">    {{ session['database'] }} - {{ session['table'] }} &nbsp&nbsp   </span>
+
+
+
+        <a class="nav-link" href="/settings/edit/">
+          <i class="fas fa-cog fa-lg white-text"></i>
+        </a>
+
+
+    </div>
+
+
+</nav>
+
+
+{%  block show_table_info %}
+{%  endblock %}
+
+
+{% endblock %}

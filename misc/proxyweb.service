@@ -1,0 +1,14 @@
+[Unit]
+Description=ProxyWeb a ProxySQL ui
+After=network.target
+
+[Service]
+Type=simple
+User=proxyweb
+WorkingDirectory=/usr/local/proxyweb/
+#ExecStart=/usr/local/proxyweb/bin/python3 app.py
+ExecStart=/usr/local/proxyweb/bin/gunicorn -b 0.0.0.0:5000 -w 2 --threads 2 wsgi:app
+Restart=on-abort
+
+[Install]
+WantedBy=multi-user.target

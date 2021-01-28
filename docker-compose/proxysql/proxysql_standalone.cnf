@@ -1,0 +1,321 @@
+########################################################################################
+# This config file is parsed using libconfig , and its grammar is described in:
+# http://www.hyperrealm.com/libconfig/libconfig_manual.html#Configuration-File-Grammar
+# Grammar is also copied at the end of this file
+########################################################################################
+
+########################################################################################
+# IMPORTANT INFORMATION REGARDING THIS CONFIGURATION FILE:
+########################################################################################
+# On startup, ProxySQL reads its config file (if present) to determine its datadir.
+# What happens next depends on if the database file (disk) is present in the defined
+# datadir (i.e. "/var/lib/proxysql/proxysql.db").
+#
+# If the database file is found, ProxySQL initializes its in-memory configuration from
+# the persisted on-disk database. So, disk configuration gets loaded into memory and
+# then propagated towards the runtime configuration.
+#
+# If the database file is not found and a config file exists, the config file is parsed
+# and its content is loaded into the in-memory database, to then be both saved on-disk
+# database and loaded at runtime.
+#
+# IMPORTANT: If a database file is found, the config file is NOT parsed. In this case
+#            ProxySQL initializes its in-memory configuration from the persisted on-disk
+#            database ONLY. In other words, the configuration found in the proxysql.cnf
+#            file is only used to initial the on-disk database read on the first startup.
+#
+# In order to FORCE a re-initialise of the on-disk database from the configuration file
+# the ProxySQL service should be started with "service proxysql initial".
+#
+########################################################################################
+admin_variables =
+{
+	admin_credentials="admin:admin;arthur:zaphod"
+	checksum_admin_variables="true"
+	checksum_mysql_query_rules="true"
+	checksum_mysql_servers="true"
+	checksum_mysql_users="true"
+	checksum_mysql_variables="true"
+	cluster_admin_variables_diffs_before_sync="3"
+	cluster_admin_variables_save_to_disk="true"
+	cluster_check_interval_ms="1000"
+	cluster_check_status_frequency="10"
+	cluster_mysql_query_rules_diffs_before_sync="3"
+	cluster_mysql_query_rules_save_to_disk="true"
+	cluster_mysql_servers_diffs_before_sync="3"
+	cluster_mysql_servers_save_to_disk="true"
+	cluster_mysql_users_diffs_before_sync="3"
+	cluster_mysql_users_save_to_disk="true"
+	cluster_mysql_variables_diffs_before_sync="3"
+	cluster_mysql_variables_save_to_disk="true"
+	cluster_password="radmin"
+	cluster_proxysql_servers_diffs_before_sync="3"
+	cluster_proxysql_servers_save_to_disk="true"
+	cluster_username="radmin"
+	hash_passwords="true"
+	mysql_ifaces="0.0.0.0:6032"
+	prometheus_memory_metrics_interval="61"
+	read_only="false"
+	refresh_interval="2000"
+	restapi_enabled="false"
+	restapi_port="6070"
+	stats_credentials="stats:stats"
+	stats_mysql_connection_pool="60"
+	stats_mysql_connections="60"
+	stats_mysql_query_cache="60"
+	stats_mysql_query_digest_to_disk="0"
+	stats_system_cpu="60"
+	stats_system_memory="60"
+	telnet_admin_ifaces="(null)"
+	telnet_stats_ifaces="(null)"
+	vacuum_stats="true"
+	version="2.1.0-544-g17a4b4a7"
+	web_enabled="false"
+	web_port="6080"
+	web_verbosity="0"
+}
+
+mysql_variables = 
+{
+	auditlog_filesize="104857600"
+	aurora_max_lag_ms_only_read_from_replicas="2"
+	auto_increment_delay_multiplex="5"
+	autocommit_false_is_transaction="false"
+	autocommit_false_not_reusable="false"
+	automatic_detect_sqli="0"
+	binlog_reader_connect_retry_msec="3000"
+	client_found_rows="true"
+	client_multi_statements="true"
+	client_session_track_gtid="true"
+	commands_stats="true"
+	connect_retries_delay="1"
+	connect_retries_on_failure="100"
+	connect_timeout_client="10000"
+	connect_timeout_server="3000"
+	connect_timeout_server_max="10000"
+	connection_delay_multiplex_ms="0"
+	connection_max_age_ms="0"
+	connection_warming="false"
+	connpoll_reset_queue_length="50"
+	default_charset="utf8"
+	default_collation_connection="utf8_general_ci"
+	default_max_latency_ms="1000"
+	default_query_delay="0"
+	default_query_timeout="36000000"
+	default_reconnect="true"
+	default_schema="information_schema"
+	default_session_track_gtids="OFF"
+	default_tx_isolation="READ-COMMITTED"
+	enforce_autocommit_on_reads="false"
+	eventslog_default_log="0"
+	eventslog_filesize="104857600"
+	eventslog_format="1"
+	firewall_whitelist_enabled="0"
+	firewall_whitelist_errormsg="Firewall blocked this query"
+	forward_autocommit="false"
+	free_connections_pct="10"
+	handle_unknown_charset="1"
+	have_compress="true"
+	have_ssl="false"
+	hostgroup_manager_verbose="1"
+	interfaces="0.0.0.0:6033"
+	keep_multiplexing_variables="tx_isolation,version"
+	kill_backend_connection_when_disconnect="true"
+	log_unhealthy_connections="true"
+	long_query_time="1000"
+	max_allowed_packet="67108864"
+	max_connections="2048"
+	max_stmts_cache="10000"
+	max_stmts_per_connection="20"
+	max_transaction_idle_time="14400000"
+	max_transaction_time="14400000"
+	min_num_servers_lantency_awareness="1000"
+	mirror_max_concurrency="16"
+	mirror_max_queue_length="32000"
+	monitor_connect_interval="2000"
+	monitor_connect_timeout="600"
+	monitor_enabled="true"
+	monitor_galera_healthcheck_interval="5000"
+	monitor_galera_healthcheck_max_timeout_count="3"
+	monitor_galera_healthcheck_timeout="800"
+	monitor_groupreplication_healthcheck_interval="5000"
+	monitor_groupreplication_healthcheck_max_timeout_count="3"
+	monitor_groupreplication_healthcheck_timeout="800"
+	monitor_groupreplication_max_transactions_behind_count="3"
+	monitor_history="600000"
+	monitor_password="msandbox"
+	monitor_ping_interval="2000"
+	monitor_ping_max_failures="100"
+	monitor_ping_timeout="1000"
+	monitor_query_interval="60000"
+	monitor_query_timeout="100"
+	monitor_read_only_interval="2000"
+	monitor_read_only_max_timeout_count="3"
+	monitor_read_only_timeout="500"
+	monitor_replication_lag_count="1"
+	monitor_replication_lag_interval="10000"
+	monitor_replication_lag_timeout="1000"
+	monitor_slave_lag_when_null="60"
+	monitor_threads_max="128"
+	monitor_threads_min="8"
+	monitor_threads_queue_maxsize="128"
+	monitor_username="msandbox"
+	monitor_wait_timeout="true"
+	monitor_writer_is_also_reader="true"
+	multiplexing="true"
+	ping_interval_server_msec="120000"
+	ping_timeout_server="500"
+	poll_timeout="2000"
+	poll_timeout_on_failure="100"
+	query_cache_size_MB="256"
+	query_cache_stores_empty_result="true"
+	query_digests="true"
+	query_digests_grouping_limit="3"
+	query_digests_lowercase="false"
+	query_digests_max_digest_length="2048"
+	query_digests_max_query_length="65000"
+	query_digests_no_digits="false"
+	query_digests_normalize_digest_text="false"
+	query_digests_replace_null="false"
+	query_digests_track_hostname="false"
+	query_processor_iterations="0"
+	query_processor_regex="1"
+	query_retries_on_failure="1"
+	reset_connection_algorithm="2"
+	server_capabilities="569899"
+	server_version="5.5.30"
+	servers_stats="true"
+	session_idle_ms="1000"
+	session_idle_show_processlist="true"
+	sessions_sort="true"
+	set_query_lock_on_hostgroup="1"
+	show_processlist_extended="0"
+	shun_on_failures="5"
+	shun_recovery_time_sec="10"
+	stacksize="1048576"
+	stats_time_backend_query="false"
+	stats_time_query_processor="false"
+	tcp_keepalive_time="0"
+	threads="4"
+	threshold_query_length="524288"
+	threshold_resultset_size="4194304"
+	throttle_connections_per_sec_to_hostgroup="1000000"
+	throttle_max_bytes_per_second_to_client="0"
+	throttle_ratio_server_to_client="0"
+	use_tcp_keepalive="0"
+	verbose_query_error="false"
+	wait_timeout="28800000"
+}
+mysql_users:
+(
+	{
+		username="msandbox"
+		password="msandbox"
+		active=1
+		use_ssl=0
+		default_hostgroup=1
+		schema_locked=0
+		transaction_persistent=1
+		fast_forward=0
+		backend=1
+		frontend=1
+		max_connections=10000
+	}
+)
+mysql_query_rules:
+(
+	{
+		rule_id=1
+		active=1
+		flagIN=0
+		match_digest="^SELECT.*FOR UPDATE"
+		negate_match_pattern=0
+		re_modifiers="CASELESS"
+		destination_hostgroup=1
+		apply=1
+	},
+	{
+		rule_id=2
+		active=1
+		flagIN=0
+		match_digest="^SELECT"
+		negate_match_pattern=0
+		re_modifiers="CASELESS"
+		destination_hostgroup=2
+		apply=1
+	}
+)
+mysql_servers:
+(
+	{
+		hostgroup_id=1
+		hostname="172.17.0.1"
+		port=19327
+		gtid_port=0
+		status="ONLINE"
+		weight=1
+		compression=0
+		max_connections=1000
+		max_replication_lag=0
+		use_ssl=0
+		max_latency_ms=0
+	},
+	{
+		hostgroup_id=2
+		hostname="172.17.0.1"
+		port=19329
+		gtid_port=0
+		status="ONLINE"
+		weight=1
+		compression=0
+		max_connections=1000
+		max_replication_lag=0
+		use_ssl=0
+		max_latency_ms=0
+	},
+	{
+		hostgroup_id=2
+		hostname="172.17.0.1"
+		port=19328
+		gtid_port=0
+		status="ONLINE"
+		weight=1
+		compression=0
+		max_connections=1000
+		max_replication_lag=0
+		use_ssl=0
+		max_latency_ms=0
+	}
+)
+mysql_replication_hostgroups:
+(
+	{
+		writer_hostgroup=1
+		reader_hostgroup=2
+		check_type="read_only"
+		comment="cluster1"
+	}
+)
+mysql_group_replication_hostgroups:
+(
+
+)
+mysql_galera_hostgroups:
+(
+
+)
+mysql_aws_aurora_hostgroups:
+(
+
+)
+scheduler:
+(
+
+)
+restapi:
+(
+
+)
+proxysql_servers:
+(
+)

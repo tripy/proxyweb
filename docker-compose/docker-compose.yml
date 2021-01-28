@@ -1,0 +1,52 @@
+version: '3.3'
+
+services:
+  proxyweb:
+    image: proxyweb/proxyweb
+    ports:
+      - "5000:5000"
+    volumes:
+      - ${PWD}/proxyweb/config.yml:/app/config/config.yml
+    depends_on:
+      - dbtest
+      - proxysql_donor
+      - proxysql_satellite
+      - proxysql_standalone
+
+  dbtest:
+    image: proxyweb/dbtest
+    ports:
+      - "19327:19327"
+      - "19328:19328"
+      - "19329:19329"
+
+  proxysql_donor:
+    image: proxysql/proxysql
+    ports:
+      - "16032:6032"
+      - "13306:6033"
+    volumes:
+      - ${PWD}/proxysql/proxysql_donor.cnf:/etc/proxysql.cnf
+    depends_on:
+      - dbtest
+
+  proxysql_satellite:
+    image: proxysql/proxysql
+    ports:
+      - "16033:6032"
+      - "13307:6033"
+    volumes:
+      - ${PWD}/proxysql/proxysql_satellite.cnf:/etc/proxysql.cnf
+    depends_on:
+      - dbtest
+
+  proxysql_standalone:
+    image: proxysql/proxysql
+    ports:
+      - "16034:6032"
+      - "13308:6033"
+    volumes:
+      - ${PWD}/proxysql/proxysql_standalone.cnf:/etc/proxysql.cnf
+    depends_on:
+      - dbtest
+
