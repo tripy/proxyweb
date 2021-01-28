@@ -152,7 +152,7 @@ mysql -vvv -u msandbox -pmsandbox -P 13306 -h 127.0.0.1  world -e "select * from
 You can observe that the select was redirected to the hostgroup=2 which is the reader.
 http://127.0.0.1:5000/proxysql_donor/stats/stats_mysql_query_digest/
 
-####Let's setup the ProxySQL cluster:
+#### Let's setup the ProxySQL cluster:
 
 Run the following on the  [proxysql_donor](http://127.0.0.1:5000/proxysql_donor/main/global_variables/) first THEN run these on the [proxysql_satellite](http://127.0.0.1:5000/proxysql_satellite/main/global_variables/).
 The order is important as one the 'satellite' node will start syncing the configs it will also pull the proxysql_servers list.
@@ -206,13 +206,13 @@ The proxysql_standalone ProxySQL instance have all the above (mysql_servers, use
 - WEBSERVER_THREADS = 4 (default = 2)
 
 
-##Features on the roadmap
+### Features on the roadmap
 - ability to edit tables
 - report menu
 - authentication
 - more advanced input validation
 ---
-##Credits:
+### Credits:
 
 Thanks for Rene Cannao and the SysOwn team for the wonderful [ProxySQL](https://proxysql.com/).
 
