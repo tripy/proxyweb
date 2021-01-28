@@ -154,8 +154,8 @@ http://127.0.0.1:5000/proxysql_donor/stats/stats_mysql_query_digest/
 
 #### Let's setup the ProxySQL cluster:
 
-Run the following on the  [proxysql_donor](http://127.0.0.1:5000/proxysql_donor/main/global_variables/) first THEN run these on the [proxysql_satellite](http://127.0.0.1:5000/proxysql_satellite/main/global_variables/).
-The order is important as one the 'satellite' node will start syncing the configs it will also pull the proxysql_servers list.
+Run the following on the  [proxysql_donor](http://127.0.0.1:5000/proxysql_donor/main/global_variables/) first THEN on the [proxysql_satellite](http://127.0.0.1:5000/proxysql_satellite/main/global_variables/).
+The order is important as the 'satellite' node will start syncing the configs and it will also pull the runtime_proxysql_servers table.
 ```
 UPDATE global_variables SET variable_value='radmin' WHERE variable_name = 'admin-cluster_username';
 UPDATE global_variables SET variable_value='radmin' WHERE variable_name = 'admin-cluster_password';
@@ -168,13 +168,13 @@ LOAD PROXYSQL SERVERS TO RUNTIME;
 SAVE PROXYSQL SERVERS TO DISK;
 ```
 
-Check the proxysql_satellite runtime config:
+Check these proxysql_satellite runtime configs:
 - [servers](http://127.0.0.1:5000/proxysql_satellite/main/runtime_mysql_servers/)
 - [users](http://127.0.0.1:5000/proxysql_satellite/main/runtime_mysql_users/)
 - [query_rules](http://127.0.0.1:5000/proxysql_satellite/main/runtime_mysql_query_rules/)
 - [connection_pool](http://127.0.0.1:5000/proxysql_satellite/stats/stats_mysql_connection_pool/)
 
-All the config from the proxysql_donor is there. 
+All the configs from the proxysql_donor are there. 
 
 Let's add a new rule to the [proxysql_donor](http://127.0.0.1:5000/proxysql_donor/main/mysql_query_rules/
 ):
