@@ -31,7 +31,7 @@ make install
 Visit  [http://ip_of_the_host:5000/setting/edit](http://ip_of_the_host:5000/setting/edit) first and adjust the credentials if needed. 
 The default connection is the local one with the default credentials.
 
-## Install ProxyWeb to work with remove ProxySQL servers
+## Install ProxyWeb to work with remote ProxySQL servers
 ### Configure ProxySQL for remote admin access
 
 ProxySQL only allows local admin connections by default.
