@@ -2,17 +2,21 @@
 Open Source Web UI for [ProxySQL](https://proxysql.com/)
 
 
-![ProxyWeb ui](misc/ProxyWeb.jpg)
+![ProxyWeb ui](misc/ProxyWeb_main.jpg)
+![ProxyWeb reporting](misc/ProxyWeb_report.jpg)
+![ProxyWeb servers](misc/ProxyWeb_servers.jpg)
 
 **Current features include**:
 - Clean and responsive design
-- multi-server support
-- global and per-server options
-- hide unused tables (global or per-server basis)   
+- Multi-server support
+- Configurable reporting    
+- Global and per-server options
+- Hide unused tables (global or per-server basis)   
 - Sort content by any column (asc/desc)
-- online config editor
+- Online config editor
 - Narrow-down content search 
 - Paginate content
+
 
 
 # Setup 
@@ -99,7 +103,7 @@ Once this is done, another ProxySQL server will be added as a [ProxySQL cluster]
 
 ### Configure the proxysql_donor:  
 You can start executing these, check the tables after each section:
-```
+```buildoutcfg
 ### configure the monitoring user: 
 UPDATE global_variables SET variable_value='msandbox' WHERE variable_name='mysql-monitor_username';
 UPDATE global_variables SET variable_value='msandbox' WHERE variable_name='mysql-monitor_password';
@@ -156,7 +160,7 @@ http://127.0.0.1:5000/proxysql_donor/stats/stats_mysql_query_digest/
 
 Run the following on the  [proxysql_donor](http://127.0.0.1:5000/proxysql_donor/main/global_variables/) first THEN on the [proxysql_satellite](http://127.0.0.1:5000/proxysql_satellite/main/global_variables/).
 The order is important as the 'satellite' node will start syncing the configs and it will also pull the runtime_proxysql_servers table.
-```
+```buildoutcfg
 UPDATE global_variables SET variable_value='radmin' WHERE variable_name = 'admin-cluster_username';
 UPDATE global_variables SET variable_value='radmin' WHERE variable_name = 'admin-cluster_password';
 
@@ -206,9 +210,85 @@ The proxysql_standalone ProxySQL instance have all the above (mysql_servers, use
 - WEBSERVER_THREADS = 4 (default = 2)
 
 
+### Config file 
+example:
+```buildoutcfg
+global:
+  hide_tables: [ '' ]
+  default_server: "proxysql_donor"
+  read_only: true
+  adhoc_report:
+    - { "title": "Top 10 SELECTs by exec_time",
+        "info": "Looking at queries with big exec_time(number of execution * time to run) is a good point to start when optimizing queries.",
+        "sql": "SELECT digest,username,schemaname, SUBSTR(digest_text,0,80),count_star,sum_time, count_star*sum_time as exec_time FROM stats_mysql_query_digest WHERE digest_text LIKE 'SELECT%' ORDER BY count_star*sum_time DESC LIMIT 10;"
+    }
+
+    - { "title": "Top 10 SELECTs by sum_time",
+        "info": "While eliminating the long running queries is a usually a good idea, these queries don't always have a huge impact on the overall latency (the user experience).",
+        "sql": "SELECT digest,username,schemaname, SUBSTR(digest_text,0,80),count_star,sum_time FROM stats_mysql_query_digest WHERE digest_text LIKE 'SELECT%' ORDER BY sum_time DESC LIMIT 10;"
+    }
+
+    - { "title": "Top 10 SELECTs by count_star",
+        "info": "Caching/rewriting/even removing  frequently running queries can improve the overall performance significantly. ProxySQL support all the mentioned methods. Example: it's a good idea to cache queries often issued by connectors like `^SELECT @@max_allowed_packet`",
+        "sql": "SELECT digest,username,schemaname, SUBSTR(digest_text,0,80),count_star,sum_time FROM stats_mysql_query_digest WHERE digest_text LIKE 'SELECT%' ORDER BY count_star DESC LIMIT 10;"
+    }
+
+    - { "title": "Schemas with the most DMLs",
+        "info": "This helps identify the schemas getting the most writes",
+        "sql": "SELECT schemaname, sum(sum_time) as time_spent, sum(count_star) as sum_count_star   FROM stats_mysql_query_digest where digest_text LIKE 'INSERT%' or digest_text like 'DELETE%' or digest_text like 'UPDATE%' group by schemaname order by time_spent desc;" }
+
+    - { "title": "Top 5 schemas by exec_time",
+        "info": "List of the schemas with the highest overall exec_time",
+        "sql": "SELECT schemaname, count_star*sum_time as exec_time   FROM stats_mysql_query_digest group by schemaname order by count_star*sum_time desc limit 5;" }
+
+    - { "title": "Send the top 5 SELECTS to the readers",
+        "info": "Don't send  selects to the readers without checking the impact first as the app might read back the data immediately writing it.",
+        "sql": "select \"replace into mysql_query_rules (username,schemaname,destination_hostgroup,active,apply,digest) values('\" || st.username || \"','\" || st.schemaname || \"',12,1,1,'\" ||  st.digest || \"');\" from stats_mysql_query_digest st left join runtime_mysql_query_rules qr on st.digest = qr.digest where  qr.rule_id is null  and digest_text LIKE 'SELECT%' ORDER BY count_star desc limit 5;" }
+
+servers:
+  proxysql_donor:
+    dsn:
+      - { "host": "172.17.0.1", "user": "radmin", "passwd": "radmin", "port": "16032", "db": "main" }
+
+    read_only: false
+  proxysql_satellite:
+    dsn:
+      - { "host": "172.17.0.1", "user": "radmin", "passwd": "radmin", "port": "16033", "db": "main" }
+    read_only: true
+
+  proxysql_standalone:
+    dsn:
+      - { "host": "172.17.0.1", "user": "arthur", "passwd": "zaphod", "port": "16034", "db": "main" }
+    read_only: false
+    hide_tables: [ 'mysql_aws_aurora_hostgroups', 'mysql_server_aws_aurora_failovers', 'mysql_server_aws_aurora_check_status', 'mysql_server_group_replication_log', 'mysql_galera_hostgroups', 'runtime_mysql_galera_hostgroups', 'mysql_server_aws_aurora_log' , 'mysql_server_aws_aurora_log', 'runtime_mysql_aws_aurora_hostgroups', 'runtime_mysql_server_aws_aurora_failovers', 'runtime_mysql_server_aws_aurora_check_status', 'runtime_mysql_server_group_replication_log', 'runtime_mysql_server_aws_aurora_log', 'runtime_mysql_server_aws_aurora_log', 'mysql_collations', 'mysql_firewall_whitelist_rules', 'mysql_firewall_whitelist_sqli_fingerprints', 'mysql_firewall_whitelist_users', 'mysql_query_rules_fast_routing', 'mysql_group_replication_hostgroups', 'restapi_routes', 'runtime_mysql_collations', 'runtime_mysql_firewall_whitelist_rules', 'runtime_mysql_firewall_whitelist_sqli_fingerprints', 'runtime_mysql_firewall_whitelist_users', 'runtime_mysql_query_rules_fast_routing', 'runtime_mysql_group_replication_hostgroups', 'runtime_restapi_routes', 'scheduler','mysql_server_galera_log' ]
+
+flask:
+  SECRET_KEY: "12345678901234567890"
+  SEND_FILE_MAX_AGE_DEFAULT: 0
+  TEMPLATES_AUTO_RELOAD: "True"
+```
+#### Global
+The global `read_only` and `hide_tables` will only used if they are not defined under the servers
+
+| Veriable  | values| effect
+| :---         |     :---:      |      :---:      |          
+| read_only   | true/false |hides the sql editor   | 
+| hide_tables   |  array: ['table1','table2']    | hides the tables from the ProxyWeb menus |
+| default_server   |   servers.${servername}   | which server will be shown as default upon startup|
+| adhoc_report   |   sql to run and other info    | sql results to display when visiting the misc/proxysql report menu item|
+
+#### Servers 
+List of servers and credentials used for establish connection to ProxySQLs
+The `read_only` and `hide_tables` variables added here have preference over the global one. 
+
+#### Flask
+Used to configure Flask, don't touch. 
+A random `SECRET_KEY` is generated when using the dockerized ProxyWeb or when running `make install`)
+) 
+
+
 ### Features on the roadmap
 - ability to edit tables
-- report menu
 - authentication
 - more advanced input validation
 ---
