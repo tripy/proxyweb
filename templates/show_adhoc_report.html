@@ -1,0 +1,78 @@
+{%  extends 'list_dbs.html' %}
+
+
+{% block show_adhoc_report %}
+
+
+{% for result in adhoc_results %}
+</br></br>
+<table id="adhoc_results" class=" table table-striped  table-bordered table-sm" cellspacing="0" width="100%">
+    <!-- Buttons trigger collapse -->
+
+
+    <!-- Collapse buttons -->
+    <div class="text-center">
+        <button class=" btn  btn-outline-dark" type="button" data-toggle="collapse"
+                data-target="#collapse{{loop.index}}"
+                aria-expanded="false" aria-controls="collapse">
+            {{ result['title'] }}
+        </button>
+        </br>
+
+
+    </div>
+    <!-- / Collapse buttons -->
+
+    <!-- Collapsible element -->
+        <div class="collapse text-left dark-grey-text" id="collapse{{loop.index}}">
+        <div class="container my-3 py-3 z-depth-1">
+            <p class="font-weight-bold">Info</p>
+            <section class="dark-grey-text ">
+                {{ result['info'] }}
+            </section>
+
+        </div>
+    </div>
+    <div class="collapse text-left dark-grey-text" id="collapse{{loop.index}}">
+        <div class="container my-3 py-3 z-depth-1">
+            <section class="dark-grey-text ">
+                {{ result['sql'] }}
+            </section>
+
+        </div>
+    </div>
+    <!-- / Collapsible element -->
+
+    <thead>
+
+    <tr>
+        {% for column_name in result['column_names'] %}
+        <th class="th-sm">{{ column_name }}
+
+        </th>
+        {% endfor %}
+    </tr>
+    </thead>
+
+    <tbody>
+    {% for row in result['rows'] %}
+    <tr>
+        {% for column in row %}
+        <td style="max-width:850px;"> {{ column }}</td>
+        {% endfor %}
+    </tr>
+
+    {% endfor %}
+
+    </tbody>
+
+
+</table>
+
+{% endfor %}
+
+
+</br>
+
+
+{%  endblock %}
