@@ -269,7 +269,7 @@ flask:
   TEMPLATES_AUTO_RELOAD: "True"
 ```
 #### Global
-The global `read_only` and `hide_tables` will only used if they are not defined under the servers
+The global `read_only` and `hide_tables` will be only used if they are not defined under the servers
 
 | Veriable  | values| effect
 | :---         |     :---:      |      :---:      |          
