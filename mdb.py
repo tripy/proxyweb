@@ -116,6 +116,34 @@ def get_table_content(db, server, database, table):
         db['cnf']['servers'][server]['conn'].close
         raise ValueError(e)
 
+def execute_adhoc_report(db, server):
+    '''returns with a dict with two keys "column_names" = list and  rows = tuples '''
+    adhoc_results = []
+    result = {}
+    try:
+        db_connect(db, server=server, dictionary=False)
+
+        config = get_config()
+        if 'adhoc_report' in config['global']:
+            for item in config['global']['adhoc_report']:
+                logging.debug("query: {}".format(item))
+                db['cnf']['servers'][server]['cur'].execute(item['sql'])
+
+                result['rows'] = db['cnf']['servers'][server]['cur'].fetchall()
+                result['title'] = item['title']
+                result['sql'] = item['sql']
+                result['info'] = item['info']
+                result['column_names'] = [i[0] for i in db['cnf']['servers'][server]['cur'].description]
+                adhoc_results.append(result.copy())
+        else:
+            pass
+
+        return adhoc_results
+    except (mysql.connector.Error, mysql.connector.Warning) as e:
+        db['cnf']['servers'][server]['conn'].close
+        raise ValueError(e)
+
+
 def get_servers():
     proxysql_servers = []
     try:

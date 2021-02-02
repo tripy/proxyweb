@@ -87,6 +87,16 @@ def render_change(server, database, table):
     except Exception as e:
         raise ValueError(e)
 
+@app.route('/<server>/adhoc/')
+def adhoc_report(server):
+    try:
+
+        adhoc_results = mdb.execute_adhoc_report(db, server)
+        return render_template("show_adhoc_report.html", adhoc_results=adhoc_results)
+    except Exception as e:
+        raise ValueError(e)
+
+
 @app.route('/settings/<action>/', methods=['GET', 'POST'])
 def render_settings(action):
     try:
