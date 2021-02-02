@@ -216,6 +216,25 @@ global:
   hide_tables: [ '' ]
   default_server: "proxysql_donor"
   read_only: true
+
+servers:
+  proxysql_donor:
+    dsn:
+      - { "host": "172.17.0.1", "user": "radmin", "passwd": "radmin", "port": "16032", "db": "main" }
+
+    read_only: false
+  proxysql_satellite:
+    dsn:
+      - { "host": "172.17.0.1", "user": "radmin", "passwd": "radmin", "port": "16033", "db": "main" }
+    read_only: true
+
+  proxysql_standalone:
+    dsn:
+      - { "host": "172.17.0.1", "user": "arthur", "passwd": "zaphod", "port": "16034", "db": "main" }
+    read_only: false
+    hide_tables: [ 'mysql_aws_aurora_hostgroups', 'mysql_server_aws_aurora_failovers', 'mysql_server_aws_aurora_check_status', 'mysql_server_group_replication_log', 'mysql_galera_hostgroups', 'runtime_mysql_galera_hostgroups', 'mysql_server_aws_aurora_log' , 'mysql_server_aws_aurora_log', 'runtime_mysql_aws_aurora_hostgroups', 'runtime_mysql_server_aws_aurora_failovers', 'runtime_mysql_server_aws_aurora_check_status', 'runtime_mysql_server_group_replication_log', 'runtime_mysql_server_aws_aurora_log', 'runtime_mysql_server_aws_aurora_log', 'mysql_collations', 'mysql_firewall_whitelist_rules', 'mysql_firewall_whitelist_sqli_fingerprints', 'mysql_firewall_whitelist_users', 'mysql_query_rules_fast_routing', 'mysql_group_replication_hostgroups', 'restapi_routes', 'runtime_mysql_collations', 'runtime_mysql_firewall_whitelist_rules', 'runtime_mysql_firewall_whitelist_sqli_fingerprints', 'runtime_mysql_firewall_whitelist_users', 'runtime_mysql_query_rules_fast_routing', 'runtime_mysql_group_replication_hostgroups', 'runtime_restapi_routes', 'scheduler','mysql_server_galera_log' ]
+
+misc:
   adhoc_report:
     - { "title": "Top 10 SELECTs by exec_time",
         "info": "Looking at queries with big exec_time(number of execution * time to run) is a good point to start when optimizing queries.",
@@ -244,23 +263,6 @@ global:
         "info": "Don't send  selects to the readers without checking the impact first as the app might read back the data immediately writing it.",
         "sql": "select \"replace into mysql_query_rules (username,schemaname,destination_hostgroup,active,apply,digest) values('\" || st.username || \"','\" || st.schemaname || \"',12,1,1,'\" ||  st.digest || \"');\" from stats_mysql_query_digest st left join runtime_mysql_query_rules qr on st.digest = qr.digest where  qr.rule_id is null  and digest_text LIKE 'SELECT%' ORDER BY count_star desc limit 5;" }
 
-servers:
-  proxysql_donor:
-    dsn:
-      - { "host": "172.17.0.1", "user": "radmin", "passwd": "radmin", "port": "16032", "db": "main" }
-
-    read_only: false
-  proxysql_satellite:
-    dsn:
-      - { "host": "172.17.0.1", "user": "radmin", "passwd": "radmin", "port": "16033", "db": "main" }
-    read_only: true
-
-  proxysql_standalone:
-    dsn:
-      - { "host": "172.17.0.1", "user": "arthur", "passwd": "zaphod", "port": "16034", "db": "main" }
-    read_only: false
-    hide_tables: [ 'mysql_aws_aurora_hostgroups', 'mysql_server_aws_aurora_failovers', 'mysql_server_aws_aurora_check_status', 'mysql_server_group_replication_log', 'mysql_galera_hostgroups', 'runtime_mysql_galera_hostgroups', 'mysql_server_aws_aurora_log' , 'mysql_server_aws_aurora_log', 'runtime_mysql_aws_aurora_hostgroups', 'runtime_mysql_server_aws_aurora_failovers', 'runtime_mysql_server_aws_aurora_check_status', 'runtime_mysql_server_group_replication_log', 'runtime_mysql_server_aws_aurora_log', 'runtime_mysql_server_aws_aurora_log', 'mysql_collations', 'mysql_firewall_whitelist_rules', 'mysql_firewall_whitelist_sqli_fingerprints', 'mysql_firewall_whitelist_users', 'mysql_query_rules_fast_routing', 'mysql_group_replication_hostgroups', 'restapi_routes', 'runtime_mysql_collations', 'runtime_mysql_firewall_whitelist_rules', 'runtime_mysql_firewall_whitelist_sqli_fingerprints', 'runtime_mysql_firewall_whitelist_users', 'runtime_mysql_query_rules_fast_routing', 'runtime_mysql_group_replication_hostgroups', 'runtime_restapi_routes', 'scheduler','mysql_server_galera_log' ]
-
 flask:
   SECRET_KEY: "12345678901234567890"
   SEND_FILE_MAX_AGE_DEFAULT: 0
@@ -274,11 +276,13 @@ The global `read_only` and `hide_tables` will only used if they are not defined 
 | read_only   | true/false |hides the sql editor   | 
 | hide_tables   |  array: ['table1','table2']    | hides the tables from the ProxyWeb menus |
 | default_server   |   servers.${servername}   | which server will be shown as default upon startup|
-| adhoc_report   |   sql to run and other info    | sql results to display when visiting the misc/proxysql report menu item|
 
 #### Servers 
 List of servers and credentials used for establish connection to ProxySQLs
 The `read_only` and `hide_tables` variables added here have preference over the global one. 
+
+#### Misc
+Configure the adhoc reports here
 
 #### Flask
 Used to configure Flask, don't touch. 

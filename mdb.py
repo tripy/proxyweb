@@ -124,8 +124,8 @@ def execute_adhoc_report(db, server):
         db_connect(db, server=server, dictionary=False)
 
         config = get_config()
-        if 'adhoc_report' in config['global']:
-            for item in config['global']['adhoc_report']:
+        if 'adhoc_report' in config['misc']:
+            for item in config['misc']['adhoc_report']:
                 logging.debug("query: {}".format(item))
                 db['cnf']['servers'][server]['cur'].execute(item['sql'])
 

@@ -2,6 +2,27 @@ global:
   hide_tables: [ '' ]
   default_server: "proxysql"
   read_only: false
+
+servers:
+  proxysql:
+    dsn:
+      - { "host": "127.0.0.1", "user": "arthur", "passwd": "zaphod", "port": "16034", "db": "main"}
+
+
+#   proxysql_local_docker_no_host:
+#     dsn:
+#       - { "host": "172.17.0.1", "user": "radmin", "passwd": "radmin", "port": "6032", "db": "main"}
+#   proxysql_remote_read_only:
+#     dsn:
+#       - { "host": "10.77.10.23, "user": "radmin", "passwd": "radmin", "port": "6032", "db": "main"}
+#     read_only: true
+## it's possible to hide tables that won't be used  - like aurora, galera related ones
+#   proxysql_remote_with_hidden_tables:
+#     dsn:
+#       - { "host": "10.77.10.24", "user": "arthur", "passwd": "zaphod", "port": "6032", "db": "main"}
+#     hide_tables: ['mysql_aws_aurora_hostgroups', 'mysql_server_aws_aurora_failovers', 'mysql_server_aws_aurora_check_status', 'mysql_server_group_replication_log', 'mysql_server_aws_aurora_log' , 'mysql_server_aws_aurora_log', 'runtime_mysql_aws_aurora_hostgroups', 'runtime_mysql_server_aws_aurora_failovers', 'runtime_mysql_server_aws_aurora_check_status', 'runtime_mysql_server_group_replication_log', 'runtime_mysql_server_aws_aurora_log', 'runtime_mysql_server_aws_aurora_log']
+
+misc:
   adhoc_report:
     - { "title": "Top 10 SELECTs by exec_time",
         "info": "Looking at queries with big exec_time(number of execution * time to run) is a good point to start when optimizing queries.",
@@ -29,25 +50,6 @@ global:
     - { "title": "Send the top 5 SELECTS to the readers",
         "info": "Don't send  selects to the readers without checking the impact first as the app might read back the data immediately writing it.",
         "sql": "select \"replace into mysql_query_rules (username,schemaname,destination_hostgroup,active,apply,digest) values('\" || st.username || \"','\" || st.schemaname || \"',12,1,1,'\" ||  st.digest || \"');\" from stats_mysql_query_digest st left join runtime_mysql_query_rules qr on st.digest = qr.digest where  qr.rule_id is null  and digest_text LIKE 'SELECT%' ORDER BY count_star desc limit 5;" }
-
-servers:
-  proxysql:
-    dsn:
-      - { "host": "127.0.0.1", "user": "admin", "passwd": "admin", "port": "6032", "db": "main"}
-
-
-#   proxysql_local_docker_no_host:
-#     dsn:
-#       - { "host": "172.17.0.1", "user": "radmin", "passwd": "radmin", "port": "6032", "db": "main"}
-#   proxysql_remote_read_only:
-#     dsn:
-#       - { "host": "10.77.10.23, "user": "radmin", "passwd": "radmin", "port": "6032", "db": "main"}
-#     read_only: true
-## it's possible to hide tables that won't be used  - like aurora, galera related ones
-#   proxysql_remote_with_hidden_tables:
-#     dsn:
-#       - { "host": "10.77.10.24", "user": "arthur", "passwd": "zaphod", "port": "6032", "db": "main"}
-#     hide_tables: ['mysql_aws_aurora_hostgroups', 'mysql_server_aws_aurora_failovers', 'mysql_server_aws_aurora_check_status', 'mysql_server_group_replication_log', 'mysql_server_aws_aurora_log' , 'mysql_server_aws_aurora_log', 'runtime_mysql_aws_aurora_hostgroups', 'runtime_mysql_server_aws_aurora_failovers', 'runtime_mysql_server_aws_aurora_check_status', 'runtime_mysql_server_group_replication_log', 'runtime_mysql_server_aws_aurora_log', 'runtime_mysql_server_aws_aurora_log']
 
 flask:
   SECRET_KEY: "12345678901234567890"
