@@ -3,13 +3,12 @@ Open Source Web UI for [ProxySQL](https://proxysql.com/)
 
 
 ![ProxyWeb ui](misc/ProxyWeb_main.jpg)
-![ProxyWeb reporting](misc/ProxyWeb_report.jpg)
-![ProxyWeb servers](misc/ProxyWeb_servers.jpg)
+
 
 **Current features include**:
 - Clean and responsive design
-- Multi-server support
-- Configurable reporting    
+- [Multi-server support](misc/ProxyWeb_servers.jpg)
+- [Configurable reporting](misc/ProxyWeb_report.jpg)   
 - Global and per-server options
 - Hide unused tables (global or per-server basis)   
 - Sort content by any column (asc/desc)
