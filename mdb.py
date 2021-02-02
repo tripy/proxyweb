@@ -89,7 +89,7 @@ def get_all_dbs_and_tables(db, server):
                 # hide tables as per global or per server config
                 if table['tables'] not in table_exception_list:
                     all_dbs[server][i['name']].append(table['tables'])
-        db['cnf']['servers'][server]['cur'].close
+        db['cnf']['servers'][server]['cur'].close()
         return all_dbs
     except (mysql.connector.Error, mysql.connector.Warning) as e:
         raise ValueError(e)
@@ -113,7 +113,7 @@ def get_table_content(db, server, database, table):
 
         return content
     except (mysql.connector.Error, mysql.connector.Warning) as e:
-        db['cnf']['servers'][server]['conn'].close
+        db['cnf']['servers'][server]['conn'].close()
         raise ValueError(e)
 
 def execute_adhoc_report(db, server):

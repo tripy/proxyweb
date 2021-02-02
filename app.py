@@ -103,18 +103,15 @@ def render_settings(action):
         config_file_content = ""
         message = ""
         if action == 'edit':
-            f = open(config, "r")
-            config_file_content = f.read()
-            f.close
+            with open(config, "r") as f:
+                config_file_content = f.read()
         if action == 'save':
             # back it up first
-            src = open(config, "r")
-            dest = open(config + ".bak", "w")
-            dest.write(src.read())
+            with open(config, "r") as src, open(config + ".bak", "w") as dest:
+                dest.write(src.read())
 
-            f = open(config, "w")
-            f.write(request.form["settings"])
-            f.close
+            with open(config, "w") as f:
+                f.write(request.form["settings"])
             message = "success"
         return render_template("settings.html", config_file_content=config_file_content, message=message)
     except Exception as e:
