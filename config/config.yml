@@ -33,7 +33,7 @@ global:
 servers:
   proxysql:
     dsn:
-      - { "host": "127.0.0.1", "user": "arthur", "passwd": "zaphod", "port": "16034", "db": "main" }
+      - { "host": "127.0.0.1", "user": "admin", "passwd": "admin", "port": "6032", "db": "main"}
 
 
 #   proxysql_local_docker_no_host:
