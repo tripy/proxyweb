@@ -282,8 +282,7 @@ The `read_only` and `hide_tables` variables added here have preference over the 
 
 #### Flask
 Used to configure Flask, don't touch. 
-A random `SECRET_KEY` is generated when using the dockerized ProxyWeb or when running `make install`)
-) 
+A random `SECRET_KEY` is generated when using the dockerized ProxyWeb or when running `make install`.
 
 
 ### Features on the roadmap
