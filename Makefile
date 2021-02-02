@@ -77,3 +77,5 @@ compose-up:
 compose-down:
 	cd docker-compose/ && docker-compose down
 
+compose-dev:
+	cd docker-compose/ && docker-compose up dbtest proxysql_standalone
