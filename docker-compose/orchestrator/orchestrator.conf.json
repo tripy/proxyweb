@@ -1,0 +1,14 @@
+{
+  "Debug": true,
+  "ListenAddress": ":3000",
+  "MySQLTopologyUser": "msandbox",
+  "MySQLTopologyPassword": "msandbox",
+  "BackendDB": "sqlite",
+  "SQLite3DataFile": "/usr/local/orchestrator/orchestrator.sqlite3",
+  "DiscoverByShowSlaveHosts": true,
+  "MySQLHostnameResolveMethod": "@@report_host",
+  "HostnameResolveMethod": "default",
+  "PostGracefulTakeoverProcesses": [
+    "orchestrator-client -c start-slave -i {failedHost}:{failedPort}"
+  ]
+}
