@@ -84,15 +84,17 @@ make  compose-up
 ```
 This will start  the following services:
 
-| Service  | Port | Container |
-| :---         |     :---:      |          :---: |
-| MySQL source   |   19327   | dbtest    |
-| MySQL replica   |   19328   | dbtest    |
-| MySQL replica   |   19328   | dbtest    |
-| ProxySQL   | admin: 16032, app: 13306     | proxysql_donor    |
-| ProxySQL   | admin: 16033, app: 13307     | proxysql_satellite   |
-| ProxySQL   | admin: 16034, app: 13308     | proxysql_standalone    |
-| ProxyWeb   | 5000     | proxyweb    |
+| Service  | Host Port | Container | Container port
+| :---         |     :---:      |          :---: |          :---: |
+| MySQL source   |   19327   | dbtest    |19327| 
+| MySQL replica   |   19328   | dbtest    |19328|
+| MySQL replica   |   19329   | dbtest    |19329|
+| MySQL replica   |   19330   | dbtest    |19330|
+| ProxySQL   | admin: 16032, app: 13306     | proxysql_donor    |admin: 6032, app: 3306 |
+| ProxySQL   | admin: 16033, app: 13307     | proxysql_satellite   |admin: 6032, app: 3306 |
+| ProxySQL   | admin: 16034, app: 13308     | proxysql_standalone    |admin: 6032, app: 3306 |
+| Orchestrator   | 3000     | orchestrator     | 3000|
+| ProxyWeb   | 5000     | proxyweb    | 5000|
 
 After all the containers are up and  running, go to:
 [http://127.0.0.1:5000/proxysql_donor/main/global_variables/](http://127.0.0.1:5000/proxysql_donor/main/global_variables//)
@@ -109,10 +111,13 @@ UPDATE global_variables SET variable_value='msandbox' WHERE variable_name='mysql
 
 
 
-
 ### Increase the timeouts so ProxySQL won't consider the backend servers unhealhy when stopping/starting the containers
 UPDATE global_variables SET variable_value='2000' WHERE variable_name IN ('mysql-monitor_connect_interval','mysql-monitor_ping_interval','mysql-monitor_read_only_interval');
 UPDATE global_variables SET variable_value='100' WHERE variable_name IN ('mysql-connect_retries_on_failure','monitor_ping_max_failures');
+
+# Don't add the source as a reader
+UPDATE global_variables SET variable_value='false' WHERE variable_name = 'mysql-monitor_writer_is_also_reader';
+
 
 LOAD MYSQL VARIABLES TO RUNTIME;
 SAVE MYSQL VARIABLES TO DISK;
@@ -122,9 +127,10 @@ INSERT INTO mysql_replication_hostgroups (writer_hostgroup,reader_hostgroup,comm
 
 
 ### add the MySQL backend servers 
-INSERT INTO mysql_servers(hostgroup_id,hostname,port) VALUES (1,'172.17.0.1',19327);
-INSERT INTO mysql_servers(hostgroup_id,hostname,port) VALUES (1,'172.17.0.1',19328);
-INSERT INTO mysql_servers(hostgroup_id,hostname,port) VALUES (1,'172.17.0.1',19329);
+INSERT INTO mysql_servers(hostgroup_id,hostname,port) VALUES (1,'dbtest',19327);
+INSERT INTO mysql_servers(hostgroup_id,hostname,port) VALUES (1,'dbtest',19328);
+INSERT INTO mysql_servers(hostgroup_id,hostname,port) VALUES (1,'dbtest',19329);
+INSERT INTO mysql_servers(hostgroup_id,hostname,port) VALUES (1,'dbtest',19330);
 
 LOAD MYSQL SERVERS TO RUNTIME;
 SAVE MYSQL SERVERS TO DISK;
@@ -166,7 +172,7 @@ UPDATE global_variables SET variable_value='radmin' WHERE variable_name = 'admin
 LOAD ADMIN VARIABLES TO RUNTIME;
 SAVE ADMIN VARIABLES TO DISK;
 
-insert into proxysql_servers values ('172.17.0.1','16032','','donor');
+insert into proxysql_servers values ('proxysql_donor','6032','','donor');
 LOAD PROXYSQL SERVERS TO RUNTIME;
 SAVE PROXYSQL SERVERS TO DISK;
 ```
@@ -198,6 +204,31 @@ mysql -vvv -u msandbox -pmsandbox -P 13307 -h 127.0.0.1  world -e "select * from
 ```
 
 The proxysql_standalone ProxySQL instance have all the above (mysql_servers, user, routing) minus the cluster config readily available when it starts.
+
+###Orchestrator
+
+Orchestrator is running at  http://127.0.0.1:3000
+
+![Orchestrator](misc/orchestrator.jpg)
+
+Discover the MySQL topology:
+```buildoutcfg
+docker exec -it  docker-compose_orchestrator_1 ./orchestrator -c discover -i 	dbtest:19327 --debug
+
+```
+
+Or on the Orchestrator Web UI http://localhost:3000/web/discover
+
+- host name: dbtest
+- dbtest: port: 19327
+
+Failover: 
+
+<p align="center">
+<img src="https://media.giphy.com/media/Wa5toEeVNZpwG13vgi/giphy.gif">
+</p>
+
+
 
 
 ---
