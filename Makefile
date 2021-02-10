@@ -68,11 +68,32 @@ dbtest-push:
 dbtest-build-nocache:
 	cd docker-compose/dbtest && docker build --no-cache -t proxyweb/dbtest:latest .
 
+
+orchestrator-build:
+	cd docker-compose/orchestrator && docker build -t proxyweb/orchestrator:latest .
+
+orchestrator-build-nocache:
+	cd docker-compose/orchestrator && docker build --no-cache -t proxyweb/orchestrator:latest .
+
+orchestrator-pull:
+	docker pull proxyweb/orchestrator:latest
+
+orchestrator-push:
+	docker push proxyweb/orchestrator:latest
+
+orchestrator-run:
+	docker run -h orchestrator --name orchestrator -p 3000:3000 -d proxyweb/orchestrator:latest
+
+orchestrator-destroy:
+	docker stop orchestrator  && docker rm  orchestrator
+
+
 compose-destroy:
 	cd docker-compose/ && docker-compose rm -f
 
 compose-up:
-	cd docker-compose/ && docker-compose up --remove-orphans
+	cd docker-compose/ && docker-compose up --remove-orphans 
+
 
 compose-down:
 	cd docker-compose/ && docker-compose down
