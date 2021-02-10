@@ -12,6 +12,8 @@ services:
       - proxysql_donor
       - proxysql_satellite
       - proxysql_standalone
+    networks:
+      - proxyweb_test
 
   dbtest:
     image: proxyweb/dbtest
@@ -19,6 +21,9 @@ services:
       - "19327:19327"
       - "19328:19328"
       - "19329:19329"
+      - "19330:19330"
+    networks:
+      - proxyweb_test
 
   proxysql_donor:
     image: proxysql/proxysql
@@ -29,6 +34,8 @@ services:
       - ${PWD}/proxysql/proxysql_donor.cnf:/etc/proxysql.cnf
     depends_on:
       - dbtest
+    networks:
+      - proxyweb_test
 
   proxysql_satellite:
     image: proxysql/proxysql
@@ -39,6 +46,8 @@ services:
       - ${PWD}/proxysql/proxysql_satellite.cnf:/etc/proxysql.cnf
     depends_on:
       - dbtest
+    networks:
+      - proxyweb_test
 
   proxysql_standalone:
     image: proxysql/proxysql
@@ -49,4 +58,18 @@ services:
       - ${PWD}/proxysql/proxysql_standalone.cnf:/etc/proxysql.cnf
     depends_on:
       - dbtest
+    networks:
+      - proxyweb_test
 
+  orchestrator:
+    image: proxyweb/orchestrator
+    ports:
+      - "3000:3000"
+    volumes:
+      - ${PWD}/orchestrator/orchestrator.conf.json:/etc/orchestrator.conf.json
+    depends_on:
+      - dbtest
+    networks:
+      - proxyweb_test
+networks:
+  proxyweb_test:
