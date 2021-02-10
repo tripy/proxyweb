@@ -227,6 +227,16 @@ Failover demo video:
 [![Sample Failover Video](https://img.youtube.com/vi/0LT4tfzXf58/0.jpg)](https://www.youtube.com/watch?v=0LT4tfzXf58)
 
 
+In case of topological changes  the `dbtest` container might not always work after stopping/starting it.
+
+Recreating the demo env is recommended:
+```buildoutcfg
+#stopping the make compose-up by pressing ctrl+c twice 
+make compose-destroy
+make compose-up
+```
+
+
 ---
 ## Miscellaneaous 
 #### List of parameters can be passed to the ProxyWeb Docker container
