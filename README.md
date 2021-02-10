@@ -222,6 +222,8 @@ Or on the Orchestrator Web UI http://localhost:3000/web/discover
 - host name: dbtest
 - dbtest: port: 19327
 
+Failover demo video:
+
 [![Sample Failover Video](https://img.youtube.com/vi/0LT4tfzXf58/0.jpg)](https://www.youtube.com/watch?v=0LT4tfzXf58)
 
 
