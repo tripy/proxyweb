@@ -161,7 +161,7 @@ mysql_variables =
 	monitor_threads_queue_maxsize="128"
 	monitor_username="msandbox"
 	monitor_wait_timeout="true"
-	monitor_writer_is_also_reader="true"
+	monitor_writer_is_also_reader="false"
 	multiplexing="true"
 	ping_interval_server_msec="120000"
 	ping_timeout_server="500"
@@ -249,7 +249,7 @@ mysql_servers:
 (
 	{
 		hostgroup_id=1
-		hostname="172.17.0.1"
+		hostname="dbtest"
 		port=19327
 		gtid_port=0
 		status="ONLINE"
@@ -262,8 +262,21 @@ mysql_servers:
 	},
 	{
 		hostgroup_id=2
-		hostname="172.17.0.1"
+		hostname="dbtest"
 		port=19329
+		gtid_port=0
+		status="ONLINE"
+		weight=1
+		compression=0
+		max_connections=1000
+		max_replication_lag=0
+		use_ssl=0
+		max_latency_ms=0
+	},
+		{
+		hostgroup_id=2
+		hostname="dbtest"
+		port=19330
 		gtid_port=0
 		status="ONLINE"
 		weight=1
@@ -275,7 +288,7 @@ mysql_servers:
 	},
 	{
 		hostgroup_id=2
-		hostname="172.17.0.1"
+		hostname="dbtest"
 		port=19328
 		gtid_port=0
 		status="ONLINE"
