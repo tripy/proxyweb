@@ -70,7 +70,7 @@ section.
 
 ## Testing with docker-compose
 
-Setting up a fully functional MySQL/ProxySQL/ProxyWeb sandbox is super-easy with docker-compose:
+Setting up a fully functional MySQL/ProxySQL/ProxyWeb/Orchestrator sandbox is super-easy with docker-compose:
 
 ```
 git clone https://github.com/edmodo/proxyweb.git
