@@ -88,7 +88,7 @@ orchestrator-destroy:
 	docker stop orchestrator  && docker rm  orchestrator
 
 
-compose-destroy:
+compose-destroy: compose-down
 	cd docker-compose/ && docker-compose rm -f
 
 compose-up:
