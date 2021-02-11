@@ -75,7 +75,7 @@ admin_variables =
 	web_verbosity="0"
 }
 
-mysql_variables = 
+mysql_variables =
 {
 	auditlog_filesize="104857600"
 	aurora_max_lag_ms_only_read_from_replicas="2"
@@ -143,7 +143,7 @@ mysql_variables =
 	monitor_groupreplication_healthcheck_timeout="800"
 	monitor_groupreplication_max_transactions_behind_count="3"
 	monitor_history="600000"
-	monitor_password="msandbox"
+	monitor_password="monitor"
 	monitor_ping_interval="2000"
 	monitor_ping_max_failures="100"
 	monitor_ping_timeout="1000"
@@ -159,7 +159,7 @@ mysql_variables =
 	monitor_threads_max="128"
 	monitor_threads_min="8"
 	monitor_threads_queue_maxsize="128"
-	monitor_username="msandbox"
+	monitor_username="monitor"
 	monitor_wait_timeout="true"
 	monitor_writer_is_also_reader="false"
 	multiplexing="true"
@@ -209,8 +209,8 @@ mysql_variables =
 mysql_users:
 (
 	{
-		username="msandbox"
-		password="msandbox"
+		username="sakila"
+		password="sakila"
 		active=1
 		use_ssl=0
 		default_hostgroup=1
@@ -249,8 +249,8 @@ mysql_servers:
 (
 	{
 		hostgroup_id=1
-		hostname="dbtest"
-		port=19327
+		hostname="db1"
+		port=3306
 		gtid_port=0
 		status="ONLINE"
 		weight=1
@@ -261,9 +261,9 @@ mysql_servers:
 		max_latency_ms=0
 	},
 	{
-		hostgroup_id=2
-		hostname="dbtest"
-		port=19329
+		hostgroup_id=1
+		hostname="db2"
+		port=3306
 		gtid_port=0
 		status="ONLINE"
 		weight=1
@@ -274,9 +274,9 @@ mysql_servers:
 		max_latency_ms=0
 	},
 		{
-		hostgroup_id=2
-		hostname="dbtest"
-		port=19330
+		hostgroup_id=1
+		hostname="db3"
+		port=3306
 		gtid_port=0
 		status="ONLINE"
 		weight=1
@@ -287,9 +287,9 @@ mysql_servers:
 		max_latency_ms=0
 	},
 	{
-		hostgroup_id=2
-		hostname="dbtest"
-		port=19328
+		hostgroup_id=1
+		hostname="db4"
+		port=3306
 		gtid_port=0
 		status="ONLINE"
 		weight=1
