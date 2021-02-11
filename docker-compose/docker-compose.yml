@@ -6,7 +6,7 @@ services:
     ports:
       - "5000:5000"
     volumes:
-      - ${PWD}/proxyweb/config.yml:/app/config/config.yml
+      - ./proxyweb/config.yml:/app/config/config.yml
     depends_on:
       proxysql_donor:
         condition: service_healthy
@@ -30,6 +30,7 @@ services:
     volumes:
       - ./mysql/my.cnf:/etc/percona-server.conf.d/mysqld.cnf
       - ./mysql/setup_topology.sh:/setup_topology.sh:ro
+      - ./mysql/sample_databases:/sample_databases
     command:
       --server-id 1
     networks:
@@ -48,6 +49,7 @@ services:
     volumes:
       - ./mysql/my.cnf:/etc/percona-server.conf.d/mysqld.cnf
       - ./mysql/setup_topology.sh:/setup_topology.sh:ro
+      - ./mysql/sample_databases:/sample_databases
     command:
       --server-id 2
     networks:
@@ -66,6 +68,7 @@ services:
     volumes:
       - ./mysql/my.cnf:/etc/percona-server.conf.d/mysqld.cnf
       - ./mysql/setup_topology.sh:/setup_topology.sh:ro
+      - ./mysql/sample_databases:/sample_databases
     command:
       --server-id 3
     networks:
@@ -84,6 +87,7 @@ services:
     volumes:
       - ./mysql/my.cnf:/etc/percona-server.conf.d/mysqld.cnf
       - ./mysql/setup_topology.sh:/setup_topology.sh:ro
+      - ./mysql/sample_databases:/sample_databases
     command:
       --server-id 4
     networks:
