@@ -106,8 +106,8 @@ Once this is done, another ProxySQL server will be added as a [ProxySQL cluster]
 You can start executing these, check the tables after each section:
 ```buildoutcfg
 ### configure the monitoring user:
-UPDATE global_variables SET variable_value='msandbox' WHERE variable_name='mysql-monitor_username';
-UPDATE global_variables SET variable_value='msandbox' WHERE variable_name='mysql-monitor_password';
+UPDATE global_variables SET variable_value='monitor' WHERE variable_name='mysql-monitor_username';
+UPDATE global_variables SET variable_value='monitor' WHERE variable_name='mysql-monitor_password';
 
 
 
@@ -138,7 +138,7 @@ SAVE MYSQL SERVERS TO DISK;
 
 ### Add the MySQL user to the ProxySQL
 
-INSERT INTO mysql_users(username,password,default_hostgroup) VALUES ('msandbox','msandbox',1);
+INSERT INTO mysql_users(username,password,default_hostgroup) VALUES ('world','world',1);
 LOAD MYSQL USERS TO RUNTIME;
 SAVE MYSQL USERS TO DISK;
 
