@@ -15,14 +15,12 @@ RUN tar -xzf /tmp/dbdeployer-1.58.2.linux.tar.gz
 RUN chmod +x dbdeployer-1.58.2.linux
 RUN mv dbdeployer-1.58.2.linux /usr/local/bin/dbdeployer
 RUN /usr/local/bin/dbdeployer  downloads get-unpack mysql-5.7.26.tar.xz
-RUN /usr/local/bin/dbdeployer deploy replication 5.7.26  --bind-address=0.0.0.0  --remote-access='%' && \
+RUN /usr/local/bin/dbdeployer deploy replication 5.7.26  -n 4 --gtid  --read-only-slaves   --my-cnf-options report-host=dbtest --my-cnf-options log_slave_updates --my-cnf-options log_bin --my-cnf-options binlog_format=ROW  --bind-address=0.0.0.0  --remote-access='%' && \
  /usr/local/bin/dbdeployer data-load get world   rsandbox_5_7_26/master && \
  /usr/local/bin/dbdeployer data-load get sakila  rsandbox_5_7_26/master
-RUN echo "read_only=on" >>/root/sandboxes/rsandbox_5_7_26/node1/my.sandbox.cnf
-RUN echo "read_only=on" >>/root/sandboxes/rsandbox_5_7_26/node2/my.sandbox.cnf
 
 
 RUN rm /tmp/*.tar.gz &&  rm -rf /var/lib/apt/lists/*
 
-ENTRYPOINT /root/sandboxes/rsandbox_5_7_26/start_all && sleep infinity
+ENTRYPOINT /root/sandboxes/rsandbox_5_7_26/start_all && /root/sandboxes/rsandbox_5_7_26/use_all_slaves "stop slave;  CHANGE MASTER TO MASTER_HOST='dbtest', MASTER_USER='msandbox', MASTER_PASSWORD='msandbox', MASTER_PORT=19327, MASTER_AUTO_POSITION = 1;  start slave;"  && sleep infinity
 

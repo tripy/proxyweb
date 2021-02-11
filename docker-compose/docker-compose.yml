@@ -6,19 +6,92 @@ services:
     ports:
       - "5000:5000"
     volumes:
-      - ${PWD}/proxyweb/config.yml:/app/config/config.yml
+      - ./proxyweb/config.yml:/app/config/config.yml
     depends_on:
-      - dbtest
-      - proxysql_donor
-      - proxysql_satellite
-      - proxysql_standalone
+      proxysql_donor:
+        condition: service_healthy
+      proxysql_satellite:
+        condition: service_healthy
+      proxysql_standalone:
+        condition: service_healthy
+    networks:
+      - proxyweb_test
 
-  dbtest:
-    image: proxyweb/dbtest
-    ports:
-      - "19327:19327"
-      - "19328:19328"
-      - "19329:19329"
+  db1:
+    hostname: db1
+    image: percona:5.7.26
+    environment:
+      MYSQL_ROOT_PASSWORD: secret_password
+      MYSQL_PWD: secret_password
+    healthcheck:
+      test: "mysql -uroot -e 'SELECT 1'"
+      interval: 10s
+      retries: 6
+    volumes:
+      - ./mysql/my.cnf:/etc/percona-server.conf.d/mysqld.cnf
+      - ./mysql/setup_topology.sh:/setup_topology.sh:ro
+      - ./mysql/sample_databases:/sample_databases
+    command:
+      --server-id 1
+    networks:
+      - proxyweb_test
+
+  db2:
+    hostname: db2
+    image: percona:5.7.26
+    environment:
+      MYSQL_ROOT_PASSWORD: secret_password
+      MYSQL_PWD: secret_password
+    healthcheck:
+      test: "mysql -uroot -e 'SELECT 1'"
+      interval: 10s
+      retries: 6
+    volumes:
+      - ./mysql/my.cnf:/etc/percona-server.conf.d/mysqld.cnf
+      - ./mysql/setup_topology.sh:/setup_topology.sh:ro
+      - ./mysql/sample_databases:/sample_databases
+    command:
+      --server-id 2
+    networks:
+      - proxyweb_test
+
+  db3:
+    hostname: db3
+    image: percona:5.7.26
+    environment:
+      MYSQL_ROOT_PASSWORD: secret_password
+      MYSQL_PWD: secret_password
+    healthcheck:
+      test: "mysql -uroot -e 'SELECT 1'"
+      interval: 10s
+      retries: 6
+    volumes:
+      - ./mysql/my.cnf:/etc/percona-server.conf.d/mysqld.cnf
+      - ./mysql/setup_topology.sh:/setup_topology.sh:ro
+      - ./mysql/sample_databases:/sample_databases
+    command:
+      --server-id 3
+    networks:
+      - proxyweb_test
+
+  db4:
+    hostname: db4
+    image: percona:5.7.26
+    environment:
+      MYSQL_ROOT_PASSWORD: secret_password
+      MYSQL_PWD: secret_password
+    healthcheck:
+      test: "mysql -uroot -e 'SELECT 1'"
+      interval: 10s
+      retries: 6
+    volumes:
+      - ./mysql/my.cnf:/etc/percona-server.conf.d/mysqld.cnf
+      - ./mysql/setup_topology.sh:/setup_topology.sh:ro
+      - ./mysql/sample_databases:/sample_databases
+    command:
+      --server-id 4
+    networks:
+      - proxyweb_test
 
   proxysql_donor:
     image: proxysql/proxysql
@@ -27,8 +100,23 @@ services:
       - "13306:6033"
     volumes:
       - ${PWD}/proxysql/proxysql_donor.cnf:/etc/proxysql.cnf
+      - ./proxysql/setup_proxysql.sh:/setup_proxysql.sh
+    healthcheck:
+      # test: "mysql -uradmin -pradmin -h 127.0.0.1 -P6032 -e 'SELECT 1'"
+      test: "ss -Htl '( sport = :6032 )'|grep LISTEN"
+      interval: 10s
+      retries: 6
     depends_on:
-      - dbtest
+      db1:
+        condition: service_healthy
+      db2:
+        condition: service_healthy
+      db3:
+        condition: service_healthy
+      db4:
+        condition: service_healthy
+    networks:
+      - proxyweb_test
 
   proxysql_satellite:
     image: proxysql/proxysql
@@ -37,16 +125,63 @@ services:
       - "13307:6033"
     volumes:
       - ${PWD}/proxysql/proxysql_satellite.cnf:/etc/proxysql.cnf
+    healthcheck:
+      # test: "mysql -uradmin -pradmin -h 127.0.0.1 -P6032 -e 'SELECT 1'"
+      test: "ss -Htl '( sport = :6032 )'|grep LISTEN"
+      interval: 10s
+      retries: 6
     depends_on:
-      - dbtest
+      db1:
+        condition: service_healthy
+      db2:
+        condition: service_healthy
+      db3:
+        condition: service_healthy
+      db4:
+        condition: service_healthy
+    networks:
+      - proxyweb_test
 
   proxysql_standalone:
     image: proxysql/proxysql
     ports:
       - "16034:6032"
       - "13308:6033"
+    healthcheck:
+      # test: "mysql -uradmin -pradmin -h 127.0.0.1 -P6032 -e 'SELECT 1'"
+      test: "ss -Htl '( sport = :6032 )'|grep LISTEN"
+      interval: 10s
+      retries: 6
     volumes:
       - ${PWD}/proxysql/proxysql_standalone.cnf:/etc/proxysql.cnf
     depends_on:
-      - dbtest
+      db1:
+        condition: service_healthy
+      db2:
+        condition: service_healthy
+      db3:
+        condition: service_healthy
+      db4:
+        condition: service_healthy
+    networks:
+      - proxyweb_test
 
+  orchestrator:
+    image: proxyweb/orchestrator
+    ports:
+      - "3000:3000"
+    volumes:
+      - ${PWD}/orchestrator/orchestrator.conf.json:/etc/orchestrator.conf.json
+    depends_on:
+      db1:
+        condition: service_healthy
+      db2:
+        condition: service_healthy
+      db3:
+        condition: service_healthy
+      db4:
+        condition: service_healthy
+    networks:
+      - proxyweb_test
+networks:
+  proxyweb_test:

@@ -1,0 +1,15 @@
+{
+  "Debug": true,
+  "ListenAddress": ":3000",
+  "MySQLTopologyUser": "orchestrator",
+  "MySQLTopologyPassword": "orch_topology_password",
+  "BackendDB": "sqlite",
+  "SQLite3DataFile": "/usr/local/orchestrator/orchestrator.sqlite3",
+  "DiscoverByShowSlaveHosts": false,
+  "MySQLHostnameResolveMethod": "@@hostname",
+  "HostnameResolveMethod": "default",
+  "PostGracefulTakeoverProcesses": [
+    "orchestrator-client -c start-slave -i {failedHost}:{failedPort}"
+  ],
+  "DetectClusterAliasQuery": "SELECT 'cluster1'"
+}
