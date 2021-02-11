@@ -74,7 +74,8 @@ Setting up a fully functional MySQL/ProxySQL/ProxyWeb/Orchestrator sandbox is su
 
 ```
 git clone https://github.com/edmodo/proxyweb.git
-cd proxyweb/docker-compose up
+cd proxyweb/docker-compose
+make up
 
 or
 
