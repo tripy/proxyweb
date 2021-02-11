@@ -7,17 +7,17 @@ proxyweb-build:
 proxyweb-build-nocache:
 	docker build --no-cache -t proxyweb/proxyweb:latest .
 
-proxyweb-run-local:
-	docker run -h proxyweb --name proxyweb --network="host" -d proxyweb/proxyweb:latest 
+proxyweb-run-local: proxyweb-build
+	docker run -h proxyweb --name proxyweb --network="host" -d proxyweb/proxyweb:latest
 
-proxyweb-run:
-	docker run -h proxyweb --name proxyweb -p 5000:5000 -d proxyweb/proxyweb:latest 
+proxyweb-run: proxyweb-build
+	docker run -h proxyweb --name proxyweb -p 5000:5000 -d proxyweb/proxyweb:latest
 
 proxyweb-run-mappedconf:
-	docker run --mount type=bind,source="`pwd`/config/config.yml",target="/app/config.yml" -h proxyweb --name proxyweb --network="host" -d proxyweb/proxyweb:latest 
+	docker run --mount type=bind,source="`pwd`/config/config.yml",target="/app/config.yml" -h proxyweb --name proxyweb --network="host" -d proxyweb/proxyweb:latest
 
-proxyweb-login:
-	docker exec -it proxyweb bash 
+proxyweb-login: proxyweb-run
+	docker exec -it proxyweb bash
 
 proxyweb-pull:
 	docker pull proxyweb/proxyweb:latest
@@ -92,11 +92,10 @@ compose-destroy:
 	cd docker-compose/ && docker-compose rm -f
 
 compose-up:
-	cd docker-compose/ && docker-compose up --remove-orphans 
-
+	cd docker-compose && make up
 
 compose-down:
-	cd docker-compose/ && docker-compose down
+	cd docker-compose && make down
 
 compose-dev:
 	cd docker-compose/ && docker-compose up dbtest proxysql_standalone
