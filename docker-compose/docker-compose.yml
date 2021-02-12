@@ -183,5 +183,30 @@ services:
         condition: service_healthy
     networks:
       - proxyweb_test
+
+  goss:
+    image: proxyweb/goss
+    ports:
+      - "8080:8080"
+    volumes:
+      - ${PWD}/goss/goss/goss.yaml:/goss/goss.yaml
+      - ${PWD}/goss/goss/vars.yaml:/goss/vars.yaml
+    depends_on:
+      proxysql_donor:
+        condition: service_healthy
+      proxysql_satellite:
+        condition: service_healthy
+      proxysql_standalone:
+        condition: service_healthy
+      db1:
+        condition: service_healthy
+      db2:
+        condition: service_healthy
+      db3:
+        condition: service_healthy
+      db4:
+        condition: service_healthy
+    networks:
+      - proxyweb_test
 networks:
   proxyweb_test:
