@@ -56,19 +56,6 @@ proxyweb-start:
 proxyweb-stop:
 	systemctl stop proxyweb
 
-dbtest-build:
-	cd docker-compose/dbtest && docker build -t proxyweb/dbtest:latest .
-
-dbtest-pull:
-	docker pull proxyweb/dbtest:latest
-
-dbtest-push:
-	docker push proxyweb/dbtest:latest
-
-dbtest-build-nocache:
-	cd docker-compose/dbtest && docker build --no-cache -t proxyweb/dbtest:latest .
-
-
 orchestrator-build:
 	cd docker-compose/orchestrator && docker build -t proxyweb/orchestrator:latest .
 
@@ -87,7 +74,6 @@ orchestrator-run:
 orchestrator-destroy:
 	docker stop orchestrator  && docker rm  orchestrator
 
-
 compose-destroy: compose-down
 	cd docker-compose/ && docker-compose rm -f
 
@@ -98,4 +84,4 @@ compose-down:
 	cd docker-compose && make down
 
 compose-dev:
-	cd docker-compose/ && docker-compose up dbtest proxysql_standalone
+	cd docker-compose/ && docker-compose up proxysql_standalone
