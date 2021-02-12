@@ -189,7 +189,7 @@ services:
     ports:
       - "8000:8000"
     volumes:
-      - ${PWD}/goss/goss:/goss:rw
+      - ${PWD}/goss/goss:/goss
     depends_on:
       proxysql_donor:
         condition: service_healthy
