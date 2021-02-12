@@ -187,10 +187,9 @@ services:
   goss:
     image: proxyweb/goss
     ports:
-      - "8080:8080"
+      - "8000:8000"
     volumes:
-      - ${PWD}/goss/goss/goss.yaml:/goss/goss.yaml
-      - ${PWD}/goss/goss/vars.yaml:/goss/vars.yaml
+      - ${PWD}/goss/goss:/goss:rw
     depends_on:
       proxysql_donor:
         condition: service_healthy
