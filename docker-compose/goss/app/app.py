@@ -20,7 +20,6 @@ __license__ = "GPLv3"
 import os
 import json
 from flask import Flask, render_template, request, session
-import pprint
 
 app = Flask(__name__)
 
@@ -30,9 +29,7 @@ def status():
     try:
         content_json = os.popen('goss  --vars /goss/vars.yaml  -g /goss/goss.yaml validate -f json   -o pretty')
         content = json.load(content_json)
-        print(content_json)
         content_ordered = sorted(content["results"], key=lambda k: k['resource-id'])
-        pprint.pprint(content_ordered)
         return render_template("status.html", content=content_ordered)
     except Exception as e:
         raise ValueError(e)
