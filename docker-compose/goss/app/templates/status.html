@@ -1,0 +1,37 @@
+{% extends 'base.html' %}
+
+
+{% block status %}
+
+
+<table class="table table-bordered text-center  ">
+    <thead>
+    <tr>
+        <th scope="col">Service</th>
+        <th scope="col">Check type</th>
+        <th scope="col">Status</th>
+    </tr>
+    </thead>
+
+    <tbody>
+    {% for row in content %}
+    <tr>
+        <td class="text-left">{{ row["resource-id"] }}</td>
+        <td>{{ row["resource-type"] }}[{{ row["property"] }}]</td>
+        <td>
+            {% if row["successful"] == True  %}
+            <i class="fas fa-check-circle fa-2x green-text "></i>
+            {% else %}
+            <i class="fas fa-times-circle fa-2x red-text"></i>
+            {% endif %}
+
+        </td>
+    </tr>
+    {% endfor %}
+
+    </tbody>
+
+
+</table>
+
+{% endblock %}
