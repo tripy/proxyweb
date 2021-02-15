@@ -2,13 +2,13 @@
 Open Source Web UI for [ProxySQL](https://proxysql.com/)
 
 
-![ProxyWeb ui](misc/ProxyWeb_main.jpg)
+![ProxyWeb ui](misc/images/ProxyWeb_main.jpg)
 
 
 **Current features include**:
 - Clean and responsive design
-- [Multi-server support](misc/ProxyWeb_servers.jpg)
-- [Configurable reporting](misc/ProxyWeb_report.jpg)
+- [Multi-server support](misc/images/ProxyWeb_servers.jpg)
+- [Configurable reporting](misc/images/ProxyWeb_report.jpg)
 - Global and per-server options
 - Hide unused tables (global or per-server basis)
 - Sort content by any column (asc/desc)
@@ -21,7 +21,8 @@ Open Source Web UI for [ProxySQL](https://proxysql.com/)
 # Setup
 
 ## Install ProxyWeb next to ProxySQL
-With Docker:
+With Doc
+ker:
 ```
 docker run -h proxyweb --name proxyweb --network="host" -d proxyweb/proxyweb:latest
 ```
@@ -95,6 +96,7 @@ This will start  the following services:
 | ProxySQL   | admin: 16033, app: 13307     | proxysql_satellite   |admin: 6032, app: 3306 |
 | ProxySQL   | admin: 16034, app: 13308     | proxysql_standalone    |admin: 6032, app: 3306 |
 | Orchestrator   | 3000     | orchestrator     | 3000|
+| Goss   | 8000     | goss     | 8000|
 | ProxyWeb   | 5000     | proxyweb    | 5000|
 
 After all the containers are up and  running, go to:
@@ -210,7 +212,7 @@ The proxysql_standalone ProxySQL instance have all the above (mysql_servers, use
 
 Orchestrator is running at  http://127.0.0.1:3000
 
-![Orchestrator](misc/orchestrator.jpg)
+![Orchestrator](misc/images/orchestrator.jpg)
 
 Discover the MySQL topology:
 ```buildoutcfg
@@ -230,6 +232,20 @@ Recreating the demo env is recommended:
 make compose-destroy
 make compose-up
 ```
+
+###Goss
+Goss is a YAML based serverspec alternative tool for validating a server’s configuration. 
+For the sake of simplicity a small web frontend was added in order to represent the health/status of our services.
+
+It's running at  http://127.0.0.1:8000
+
+Some  services  are in `failed` status initially as the purpose of this tutorial is to set the donor and satellite ProxySQLs up.
+You can check if the setup was successful by visiting this page again.
+
+The status checks are executed when the page is hit/reloaded. 
+
+![Goss](misc/images/goss.jpg)
+
 
 
 ---
