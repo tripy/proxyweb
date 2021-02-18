@@ -1,0 +1,15 @@
+{% extends 'base.html' %}
+
+{% block error  %}
+
+
+{% if error %}
+<span class="border border-primary">
+<div class="note note-danger">
+    <pre><strong>Error! </strong>{{ error }}<br><br></pre>
+</div>
+
+
+{%  endif %}
+
+{% endblock %}

@@ -74,6 +74,24 @@ orchestrator-run:
 orchestrator-destroy:
 	docker stop orchestrator  && docker rm  orchestrator
 
+goss-build:
+	cd docker-compose/goss && docker build -t proxyweb/goss:latest .
+
+goss-build-nocache:
+	cd docker-compose/goss && docker build --no-cache -t proxyweb/goss:latest .
+
+goss-pull:
+	docker pull proxyweb/goss:latest
+
+goss-push:
+	docker push proxyweb/goss:latest
+
+goss-run:
+	docker run -h goss --name goss -p 8080:8080 -d proxyweb/goss:latest
+
+goss-destroy:
+	docker stop goss  && docker rm goss
+
 compose-destroy: compose-down
 	cd docker-compose/ && docker-compose rm -f
 

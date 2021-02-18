@@ -1,0 +1,51 @@
+addr:
+{{range .Vars.dbs}}
+  tcp://{{.}}:3306:
+    reachable: true
+    timeout: 500
+{{end}}
+{{range .Vars.proxysqls}}
+  tcp://{{.}}:6032:
+    reachable: true
+    timeout: 500
+{{end}}
+{{range .Vars.proxysqls}}
+  tcp://{{.}}:6033:
+    reachable: true
+    timeout: 500
+{{end}}
+
+
+command:
+{{range .Vars.proxysqls}}
+  {{.}}_backend_through_proxy:
+    # required attributes
+    exit-status: 0
+    # defaults to hash key
+    exec: "mysql -NB -h {{.}} -u world -pworld -P 6033 world -e 'select 42'"
+    # optional attributes
+    stdout:
+    - "42"
+    stderr: []
+    timeout: 10000 # in milliseconds
+{{end}}
+  orchestrator_connectivity_check:
+    # required attributes
+    exit-status: 0
+    # defaults to hash key
+    exec: "curl -s orchestrator:3000/web/clusters/ |grep -c  'wiki/Orchestrator-Manual' "
+    # optional attributes
+    stdout:
+    - "1"
+    stderr: []
+    timeout: 10000 # in milliseconds
+  proxyweb_connectivity_check:
+    # required attributes
+    exit-status: 0
+    # defaults to hash key
+    exec: "curl -s proxyweb:5000 |grep -c  '<title>ProxyWeb</title>' "
+    # optional attributes
+    stdout:
+    - "1"
+    stderr: []
+    timeout: 10000 # in milliseconds

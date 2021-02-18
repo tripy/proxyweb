@@ -1,0 +1,11 @@
+dbs:
+  - db1
+  - db2
+  - db3
+  - db4
+
+proxysqls:
+  - proxysql_donor
+  - proxysql_satellite
+  - proxysql_standalone
+
