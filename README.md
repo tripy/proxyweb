@@ -97,8 +97,20 @@ This will start  the following services:
 | ProxySQL   | admin: 16034, app: 13308     | proxysql_standalone    |admin: 6032, app: 3306 |
 | Orchestrator   | 3000     | orchestrator     | 3000|
 | Goss   | 8000     | goss     | 8000|
-| Sysbench   | -     | sysbench    | - (make sysbench-logs)|
 | ProxyWeb   | 5000     | proxyweb    | 5000|
+
+You can add sysbench to the test cluster:
+```
+make sysbench-up
+```
+Or stop sysbench:
+```
+make sysbench-down
+```
+The sysbench output can be access with:
+```
+make sysbench-logs
+```
 
 After all the containers are up and  running, go to:
 [http://127.0.0.1:5000/proxysql_donor/main/global_variables/](http://127.0.0.1:5000/proxysql_donor/main/global_variables//)

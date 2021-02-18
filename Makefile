@@ -106,3 +106,9 @@ compose-dev:
 
 sysbench-logs:
 	cd docker-compose && make sysbench-logs
+
+sysbench-up:
+	cd docker-compose && make sysbench-up
+
+sysbench-down:
+	cd docker-compose && make sysbench-down
