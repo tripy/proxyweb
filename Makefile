@@ -103,3 +103,6 @@ compose-down:
 
 compose-dev:
 	cd docker-compose/ && docker-compose up proxysql_standalone
+
+sysbench-logs:
+	cd docker-compose && make sysbench-logs

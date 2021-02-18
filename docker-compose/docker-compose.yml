@@ -207,5 +207,43 @@ services:
         condition: service_healthy
     networks:
       - proxyweb_test
+
+  sysbench:
+    image: "perconalab/sysbench"
+    depends_on:
+      proxysql_standalone:
+        condition: service_healthy
+    command: >
+        bash -c "
+            set -o xtrace
+            sleep 20
+            sysbench \
+                --db-driver=mysql \
+                --mysql-host=proxysql_standalone \
+                --mysql-port=6033 \
+                --mysql-user=sysbench \
+                --mysql-password=sysbench \
+                --mysql-db=sbtest \
+                /usr/share/sysbench/oltp_read_write.lua \
+                prepare
+            sysbench \
+                --rate=20 \
+                --threads=2 \
+                --report-interval=10 \
+                --time=0 \
+                --events=0 \
+                --rand-type=pareto \
+                --db-driver=mysql \
+                --mysql-host=proxysql_standalone \
+                --mysql-port=6033 \
+                --mysql-user=sysbench \
+                --mysql-password=sysbench \
+                --mysql-db=sbtest \
+                /usr/share/sysbench/oltp_read_write.lua \
+                run
+              "
+    networks:
+      - proxyweb_test
+
 networks:
   proxyweb_test:

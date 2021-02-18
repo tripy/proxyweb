@@ -20,11 +20,16 @@ then
     mysql -uroot -psecret_password -e "CREATE DATABASE IF NOT EXISTS world"
     mysql -uroot -psecret_password -e "CREATE USER IF NOT EXISTS 'world'@'%' IDENTIFIED BY 'world'"
     mysql -uroot -psecret_password -e "GRANT ALL PRIVILEGES ON world.* TO 'world'@'%'"
+    # Sysbench database and user
+    mysql -uroot -psecret_password -e "CREATE DATABASE IF NOT EXISTS sbtest"
+    mysql -uroot -psecret_password -e "CREATE USER IF NOT EXISTS 'sysbench'@'%' IDENTIFIED BY 'sysbench'"
+    mysql -uroot -psecret_password -e "GRANT ALL PRIVILEGES ON sbtest.* TO 'sysbench'@'%'"
     # Monitor user for proxysql
     mysql -uroot -psecret_password -e "CREATE USER IF NOT EXISTS 'monitor'@'%' IDENTIFIED BY 'monitor'"
-    mysql -uroot -psecret_password -e "GRANT REPLICATION CLIENT ON *.* TO 'monitor'@'%'"
+    mysql -uroot -psecret_password -e "GRANT USAGE, REPLICATION CLIENT ON *.* TO 'monitor'@'%'"
     # We need this otherwise, it fails when this host becomes a replica
     mysql -uroot -psecret_password -e "CHANGE MASTER TO MASTER_USER='repl', MASTER_PASSWORD='password'"
+
 
     # Load world database
     mysql -uroot -psecret_password world < /sample_databases/world.sql

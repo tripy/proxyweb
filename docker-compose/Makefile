@@ -8,3 +8,6 @@ up:
 
 down:
 	docker-compose down --volumes
+
+sysbench-logs:
+	docker-compose logs sysbench
