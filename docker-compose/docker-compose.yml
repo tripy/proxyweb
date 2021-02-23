@@ -94,7 +94,7 @@ services:
       - proxyweb_test
 
   proxysql_donor:
-    image: proxysql/proxysql
+    image: proxysql/proxysql:2.0.17
     ports:
       - "16032:6032"
       - "13306:6033"
@@ -119,7 +119,7 @@ services:
       - proxyweb_test
 
   proxysql_satellite:
-    image: proxysql/proxysql
+    image: proxysql/proxysql:2.0.17
     ports:
       - "16033:6032"
       - "13307:6033"
@@ -143,7 +143,7 @@ services:
       - proxyweb_test
 
   proxysql_standalone:
-    image: proxysql/proxysql
+    image: proxysql/proxysql:2.0.17
     ports:
       - "16034:6032"
       - "13308:6033"
